@@ -5,23 +5,47 @@
 #include <stdio.h>		/* scanf, printf */
 #include <stdlib.h>		/* abort */
 #include <stdbool.h>		/* bool, true, false */
-#include "dfs.h"
+#include "..\include\dfs.h"
 
 
 void DFT (node * root)
 {
-	// Implement DFS
-	// Hint: You can use print_node, print_tree and/or print_stack.
+  if (root->visited == 0)
+  {
+    // push(root);
+  }
+
+  if (root->lchild)
+  {
+    DFT(root->lchild);
+  }
+
+  if (root->rchild)
+  {
+    DFT(root->rchild);
+  }
+  
+  return;
+  
+  
+  
 }
 
 node *make_node (int num, node * left, node * right)
 {
-	return 0;
+  node *p = malloc(sizeof(node));
+  p->visited  = NULL;
+  p->num      = num;
+  p->lchild   = left;
+  p->rchild   = right;
+
+  return p;
 }
 
 void free_node (node * p)
 {
-	
+  free(p);
+  return;
 }
 
 
@@ -58,17 +82,34 @@ void print_tree (node * p, int depth)
 
 stack *push (stack * topp, node * node)
 {
-	return 0;
+  stack *p = malloc(sizeof(stack));
+  p->node = node;
+
+  if (isEmpty(topp))
+  {
+    p->next = NULL;
+  }
+  else
+  {
+    p->next = topp;
+  }
+  
+  return p;
 }
 
 bool isEmpty (stack * topp)
 {
+  if (topp == NULL)
+  {
+    return true;
+  }
+  
   return false;
 }
 
 node *top (stack * topp)
 {
-	return 0;
+	return topp->node;
 }
 
 // Utility function to pop topp  
