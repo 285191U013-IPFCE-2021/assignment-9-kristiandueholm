@@ -7,57 +7,129 @@
 #include <stdbool.h>		/* bool, true, false */
 #include "..\include\dfs.h"
 
-
+// Main DFT function, calling the recursive below
 void DFT (node * root)
 {
-  if (root->visited == 0)
-  {
-    // push(root);
-  }
+  stack *s = malloc(sizeof(stack));
+  s->head = NULL;
+
+  s = recursiveDFS(root, s);
+  
+  print_stack(s->head);
+
+  free_stack(s);
+
+  return;
+}
+
+// Recursive function for pushing the node DFS style into stack
+stack *recursiveDFS(node *root, stack *s)
+{
+
+  push(s, root);
 
   if (root->lchild)
   {
-    DFT(root->lchild);
+    recursiveDFS(root->lchild, s);
   }
 
   if (root->rchild)
   {
-    DFT(root->rchild);
+    recursiveDFS(root->rchild, s);
+  }
+
+  return s;
+}
+
+// Pushing to stack "oldschool style"
+void push (stack *s, node * node)
+{
+  item *element = malloc(sizeof(item));
+  if (isEmpty(s))
+  {
+    element->next = NULL;
+  }
+  else
+  {
+    element->next = s->head;
+  }
+  element->node = node;
+  s->head = element;
+
+  return;
+}
+
+bool isEmpty (stack *s)
+{
+  if (s->head == NULL)
+  {
+    return true;
   }
   
-  return;
-  
-  
-  
+  return false;
 }
 
-node *make_node (int num, node * left, node * right)
+// Prints stack recursively
+// Nodes are pushed in reverse order,
+// So I print in reverse order
+void print_stack (item *element)
 {
-  node *p = malloc(sizeof(node));
-  p->visited  = NULL;
-  p->num      = num;
-  p->lchild   = left;
-  p->rchild   = right;
+  // Base case
+  if (element->next == NULL)
+  {
+    printf("%d ", element->node->num);
+  }
 
-  return p;
-}
-
-void free_node (node * p)
-{
-  free(p);
-  return;
-}
-
-
-void print_node (node * p)
-{
-
-  if (p == NULL)
-    printf ("NULL\n");
+  // Recursive case, go to deepest element
   else
-    printf ("%d", p->num);
+  {
+    print_stack(element->next);
+    printf("%d ", element->node->num);
+  }
+
+  return;
 }
 
+void free_nodes(node *root)
+{
+  if (root->lchild)
+  {
+    free_nodes(root->lchild);
+  }
+
+  if (root->rchild)
+  {
+    free_nodes(root->rchild);
+  }
+
+  free(root);
+
+  return;
+}
+
+void free_stack(stack *s)
+{
+  free_items(s->head);
+  free(s);
+  
+  return;
+}
+
+void free_items(item *element)
+{
+  if (element->next == NULL)
+  {
+    free(element);
+  }
+
+  else
+  {
+    free_items(element->next);
+    free(element);
+  }
+
+  return;
+}
 
 void print_tree (node * p, int depth)
 {
@@ -80,60 +152,22 @@ void print_tree (node * p, int depth)
     print_tree (p->rchild, depth + 1);
 }
 
-stack *push (stack * topp, node * node)
+void print_node (node * p)
 {
-  stack *p = malloc(sizeof(stack));
-  p->node = node;
 
-  if (isEmpty(topp))
-  {
-    p->next = NULL;
-  }
+  if (p == NULL)
+    printf ("NULL\n");
   else
-  {
-    p->next = topp;
-  }
-  
+    printf ("%d", p->num);
+}
+
+node *make_node (int num, node * left, node * right)
+{
+  node *p = malloc(sizeof(node));
+  p->visited  = NULL;
+  p->num      = num;
+  p->lchild   = left;
+  p->rchild   = right;
+
   return p;
-}
-
-bool isEmpty (stack * topp)
-{
-  if (topp == NULL)
-  {
-    return true;
-  }
-  
-  return false;
-}
-
-node *top (stack * topp)
-{
-	return topp->node;
-}
-
-// Utility function to pop topp  
-// element from the stack 
-
-stack *pop (stack * topp)
-{
-	return 0;
-}
-
-void print_stack (stack * topp)
-{
-  struct stack *temp = topp;
-
-  while (temp != NULL)
-    {
-
-      print_node (temp->node);
-      printf ("\n");
-
-      temp = temp->next;
-    }
-
-  printf ("====\n");
-
-  return;
 }

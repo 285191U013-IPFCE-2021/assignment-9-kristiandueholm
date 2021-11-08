@@ -8,30 +8,37 @@ typedef struct node
   struct node *rchild;
 } node;
 
-
-node *make_node (int num, node * left, node * right);
-
-void free_node (node * p);
-
-void print_node (node * p);
-
-void print_tree (node * p, int depth);
-
-void DFT (node * root);
-
+// Stack holding "item"
 typedef struct stack
 {
-  struct node *node;
-  struct stack *next;
+  struct item *head;
 } stack;
 
+// item holding pointer to node and to next item
+typedef struct item
+{
+  struct node *node;
+  struct item *next;
+} item;
 
-stack *push (stack * topp, node * node);
+node *make_node(int num, node * left, node * right);
 
-bool isEmpty (stack * topp);
+void print_node(node * p);
 
-node *top (stack * topp);
+void print_tree(node * p, int depth);
 
-stack *pop (stack * topp);
+stack *recursiveDFS(node *root, stack *s);
 
-void print_stack (stack * topp);
+void DFT(node * root);
+
+void push(stack *s, node * node);
+
+bool isEmpty(stack *s);
+
+void print_stack(item *element);
+
+void free_nodes(node *root);
+
+void free_stack(stack *s);
+
+void free_items(item *element);
